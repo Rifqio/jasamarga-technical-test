@@ -1,0 +1,1 @@
+1. How to Use Global Namespace In Express - https://stackoverflow.com/questions/37377731/extend-express-request-object-using-typescript
