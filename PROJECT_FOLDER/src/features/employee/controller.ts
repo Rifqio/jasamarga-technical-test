@@ -4,6 +4,7 @@ import {
     CreateEmployeeDTO,
     FindAllEmployeesDTO,
     FindOneEmployeeDTO,
+    UpdateEmployeeDTO,
 } from "./dto/request.dto";
 import * as EmployeeService from "./service";
 
@@ -52,4 +53,24 @@ export const CreateEmployee: RequestHandler = async (req, res) => {
     }
 };
 
-export const UpdateEmployee: RequestHandler = async (req, res) => {};
+export const UpdateEmployee: RequestHandler = async (req, res) => {
+    const { employeeId } = req.zod.params as FindOneEmployeeDTO;
+    const body = req.zod.body as UpdateEmployeeDTO;
+    try {
+        const data = await EmployeeService.UpdateEmployee(employeeId, body);
+        return res.success(data);
+    } catch (error) {
+        Logger.error(Context, "UpdateEmployee", error);
+        return res.buildErrorResponse(error);
+    }
+};
+
+export const GetEmployeeReport: RequestHandler = async (req, res) => {
+    try {
+        const data = await EmployeeService.GetEmployeeReport();
+        return res.success(data);
+    } catch (error) {
+        Logger.error(Context, "GetEmployeeReport", error);
+        return res.buildErrorResponse(error);
+    }
+}

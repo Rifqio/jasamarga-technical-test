@@ -1,3 +1,4 @@
+import { isEmpty, isUndefined, merge, omitBy } from "lodash";
 import { Op } from "sequelize";
 import { sequelize } from "../../database";
 import {
@@ -8,7 +9,12 @@ import {
 } from "../../database/model";
 import { Logger } from "../../helpers/logger";
 import { NotFoundException } from "../../server/exception";
-import { CreateEmployeeDTO, FindAllEmployeesDTO } from "./dto/request.dto";
+import {
+    CreateEmployeeDTO,
+    FindAllEmployeesDTO,
+    UpdateEmployeeDTO,
+} from "./dto/request.dto";
+import { EmployeeReportView } from "./interfaces";
 
 const Context = "EmployeeService";
 export const FindAllEmployees = async (filter?: FindAllEmployeesDTO) => {
@@ -101,7 +107,7 @@ export const DeleteEmployee = async (id: number) => {
         Logger.error(Context, "DeleteEmployee", error);
         throw error;
     }
-}
+};
 
 export const CreateEmployee = async (data: CreateEmployeeDTO) => {
     const transaction = await sequelize.transaction();
@@ -114,7 +120,6 @@ export const CreateEmployee = async (data: CreateEmployeeDTO) => {
         const startDate = new Date(Date.now());
         const endDate = new Date(startDate);
         endDate.setFullYear(endDate.getFullYear() + 1);
-
 
         const employee = await Employee.create(
             {
@@ -141,42 +146,151 @@ export const CreateEmployee = async (data: CreateEmployeeDTO) => {
                     createdBy: "user",
                     updatedBy: "user",
                 })),
-                families: data.families?.map((family) => ({
-                    name: family.name,
-                    relation: family.relation,
-                    job: family.job,
-                    identifier: Date.now().toString() + Math.random().toString(36).substring(7),
-                    placeOfBirth: family.placeOfBirth,
-                    dateOfBirth: family.dateOfBirth,
-                    religion: family.religion,
-                    isLife: family.isLife,
-                    isDivorced: family.isDivorced,
-                    createdBy: "user",
-                    updatedBy: "user",
-                })) || [],
+                families:
+                    data.families?.map((family) => ({
+                        name: family.name,
+                        relation: family.relation,
+                        job: family.job,
+                        identifier:
+                            Date.now().toString() +
+                            Math.random().toString(36).substring(7),
+                        placeOfBirth: family.placeOfBirth,
+                        dateOfBirth: family.dateOfBirth,
+                        religion: family.religion,
+                        isLife: family.isLife,
+                        isDivorced: family.isDivorced,
+                        createdBy: "user",
+                        updatedBy: "user",
+                    })) || [],
             },
             {
                 include: [
                     { model: EmployeeProfile },
                     { model: Education },
-                    { model: EmployeeFamily }
+                    { model: EmployeeFamily },
                 ],
-                transaction
+                transaction,
             }
         );
         await transaction.commit();
-        return employee
+        return employee;
     } catch (error) {
         await transaction.rollback();
         Logger.error(Context, "CreateEmployee", error);
         throw error;
     }
-}
+};
 
+export const UpdateEmployee = async (id: number, data: UpdateEmployeeDTO) => {
+    const transaction = await sequelize.transaction();
+    try {
+        const employee = await Employee.findByPk(id, {
+            include: [
+                { model: EmployeeProfile },
+                { model: Education },
+                { model: EmployeeFamily },
+            ],
+            transaction,
+        });
+
+        if (!employee) {
+            throw new NotFoundException("Employee not found");
+        }
+
+        if (data.nik && data.nik !== employee.nik) {
+            const isNIKExist = await _validateNIK(data.nik);
+            if (isNIKExist) {
+                throw new Error("NIK already exists");
+            }
+        }
+
+        const updatedEmployeeData = omitBy(
+            {
+                name: data.name,
+                nik: data.nik,
+                updatedBy: "user",
+            },
+            isUndefined
+        );
+
+        if (isEmpty(updatedEmployeeData)) {
+            await employee.update(updatedEmployeeData, { transaction });
+        }
+
+        if (data.profile) {
+            if (employee.profile) {
+                await employee.profile.update(
+                    merge({}, employee.profile.toJSON(), data.profile, { updatedBy: "user" }),
+                    { transaction }
+                );
+            } else {
+                await EmployeeProfile.create(
+                    {
+                        employeeId: id,
+                        ...data.profile,
+                        createdBy: "user",
+                        updatedBy: "user",
+                    },
+                    { transaction }
+                );
+            }
+        }
+
+        if (data.educations) {
+            await Education.destroy({ where: { employeeId: id }, transaction });
+            const educations = data.educations.map((edu) =>
+                merge({}, edu, { employeeId: id, createdBy: "user", updatedBy: "user" })
+            );
+            await Education.bulkCreate(educations, { transaction });
+        }
+
+        if (data.families) {
+            await EmployeeFamily.destroy({ where: { employeeId: id }, transaction });
+            const families = data.families.map((fam) =>
+                merge({}, fam, { employeeId: id, createdBy: "user", updatedBy: "user" })
+            );
+            await EmployeeFamily.bulkCreate(families, { transaction });
+        }
+
+        await transaction.commit();
+        return employee;
+    } catch (error) {
+        await transaction.rollback();
+        Logger.error(Context, "UpdateEmployee", error);
+        throw error;
+    }
+};
+
+export const GetEmployeeReport = async () => {
+    try {
+        // Refresh before get the report
+        await sequelize.query("REFRESH MATERIALIZED VIEW employee_summary");
+        const report = await sequelize.query("SELECT * FROM employee_summary");
+        if (isEmpty(report)) {
+            return [];
+        }
+        const getReport = report[0] as EmployeeReportView[];
+        const transformedReport = getReport.map((report: EmployeeReportView) => ({
+            employeeID: report.employee_id,
+            employeeName: report.name,
+            nik: report.nik,
+            isActive: report.is_active,
+            gender: report.gender,
+            age: Number(report.age),
+            schoolName: report.school_name,
+            level: report.level,
+            familyData: report.family_data,
+        }));
+        return transformedReport;
+    } catch (error) {
+        Logger.error(Context, "GetEmployeeReport", error);
+        throw error;
+    }
+}
 const _validateNIK = async (nik: string) => {
     return Employee.findOne({
         where: {
             nik,
-        }
-    })
-}
+        },
+    });
+};

@@ -68,6 +68,61 @@ export const CreateEmployeeSchema = z.object({
     }),
 });
 
+export const UpdateEmployeeSchema = z.object({
+    body: z.object({
+        name: z.string().min(3).max(255).optional(),
+        nik: z.string().min(16).max(16).optional(),
+        profile: z
+            .object({
+                placeOfBirth: z.string().min(3).max(255).optional(),
+                dateOfBirth: z.date().optional(),
+                isMarried: z.boolean().optional(),
+                profileUrl: z.string().url().optional(),
+                gender: z.enum(["Laki-Laki", "Perempuan"]).optional(),
+            })
+            .optional(),
+        educations: z
+            .array(
+                z.object({
+                    schoolName: z.string().min(3).max(255),
+                    level: z.enum([
+                        "Tk",
+                        "Sd",
+                        "Smp",
+                        "Sma",
+                        "Strata 1",
+                        "Strata 2",
+                        "Doktor",
+                        "Profesor",
+                    ]),
+                    description: z.string().min(3).max(255),
+                })
+            )
+            .optional(),
+        families: z
+            .array(
+                z.object({
+                    name: z.string().min(3).max(255),
+                    relation: z.enum(["Suami", "Istri", "Anak", "Anak Sambung"]),
+                    job: z.string().min(3).max(255),
+                    placeOfBirth: z.string().min(3).max(255),
+                    dateOfBirth: z.date(),
+                    religion: z.enum([
+                        "Islam",
+                        "Protestan",
+                        "Katolik",
+                        "Buda",
+                        "Konghucu",
+                    ]),
+                    isLife: z.boolean().optional(),
+                    isDivorced: z.boolean().optional(),
+                })
+            )
+            .optional(),
+    }),
+});
+
 export type FindAllEmployeesDTO = z.infer<typeof FindAllEmployees>["query"];
 export type FindOneEmployeeDTO = z.infer<typeof FindOneEmployee>["params"];
 export type CreateEmployeeDTO = z.infer<typeof CreateEmployeeSchema>["body"];
+export type UpdateEmployeeDTO = z.infer<typeof UpdateEmployeeSchema>["body"];
