@@ -23,7 +23,7 @@ export const CreateEmployeeSchema = z.object({
                 .string({ required_error: "Place of birth is required" })
                 .min(3)
                 .max(255),
-            dateOfBirth: z.date({
+            dateOfBirth: z.coerce.date({
                 required_error: "Date of birth is required",
             }),
             isMarried: z.boolean().default(false),
@@ -52,7 +52,7 @@ export const CreateEmployeeSchema = z.object({
                 relation: z.enum(["Suami", "Istri", "Anak", "Anak Sambung"]),
                 job: z.string().min(3).max(255),
                 placeOfBirth: z.string().min(3).max(255),
-                dateOfBirth: z.date(),
+                dateOfBirth: z.coerce.date(),
                 religion: z.enum([
                     "Islam",
                     "Protestan",
@@ -75,7 +75,7 @@ export const UpdateEmployeeSchema = z.object({
         profile: z
             .object({
                 placeOfBirth: z.string().min(3).max(255).optional(),
-                dateOfBirth: z.date().optional(),
+                dateOfBirth: z.coerce.date().optional(),
                 isMarried: z.boolean().optional(),
                 profileUrl: z.string().url().optional(),
                 gender: z.enum(["Laki-Laki", "Perempuan"]).optional(),
@@ -106,7 +106,7 @@ export const UpdateEmployeeSchema = z.object({
                     relation: z.enum(["Suami", "Istri", "Anak", "Anak Sambung"]),
                     job: z.string().min(3).max(255),
                     placeOfBirth: z.string().min(3).max(255),
-                    dateOfBirth: z.date(),
+                    dateOfBirth: z.coerce.date(),
                     religion: z.enum([
                         "Islam",
                         "Protestan",

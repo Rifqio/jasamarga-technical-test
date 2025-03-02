@@ -6,7 +6,7 @@ export type Gender = "Laki-Laki" | "Perempuan";
 @Table({ tableName: "employee_profile" })
 export class EmployeeProfile extends Model {
     @PrimaryKey
-    @Column
+    @Column({ type: DataType.INTEGER, autoIncrement: true })
     id: number;
 
     @ForeignKey(() => Employee)

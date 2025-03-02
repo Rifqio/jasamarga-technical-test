@@ -1,0 +1,424 @@
+{
+	"info": {
+		"_postman_id": "9d7c79d0-d10b-4334-a3e0-ca9c6cd1746b",
+		"name": "Technical Test - Jasamarga",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31534439"
+	},
+	"item": [
+		{
+			"name": "employees",
+			"item": [
+				{
+					"name": "Find All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/employee/v1?page=1&pageSize=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"v1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "employeeName",
+									"value": "Jarot",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success (200)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1?page=1&pageSize=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "employeeName",
+											"value": "Jarot",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"data\": [\n        {\n            \"name\": \"Budi\",\n            \"is_active\": true,\n            \"start_date\": \"2022-12-12\",\n            \"end_date\": \"2029-12-12\",\n            \"educations\": [\n                {\n                    \"school\": \"SMKN 7 Jakarta\",\n                    \"education_level\": \"Sma\",\n                    \"education_description\": \"Sekolah Menengah Atas\"\n                }\n            ],\n            \"profile\": {\n                \"gender\": \"Laki-Laki\",\n                \"is_married\": true,\n                \"prof_pict\": null\n            },\n            \"families\": [\n                {\n                    \"name\": \"Stephanie\",\n                    \"relation\": \"Anak\"\n                },\n                {\n                    \"name\": \"Clara\",\n                    \"relation\": \"Anak\"\n                },\n                {\n                    \"name\": \"Marni\",\n                    \"relation\": \"Istri\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Jarot\",\n            \"is_active\": true,\n            \"start_date\": \"2021-09-01\",\n            \"end_date\": \"2028-09-01\",\n            \"educations\": [\n                {\n                    \"school\": \"Universitas Negeri Jakarta\",\n                    \"education_level\": \"Strata 1\",\n                    \"education_description\": \"Sarjana\"\n                }\n            ],\n            \"profile\": {\n                \"gender\": \"Laki-Laki\",\n                \"is_married\": false,\n                \"prof_pict\": null\n            },\n            \"families\": []\n        }\n    ],\n    \"message\": \"Success\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Find One Employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/employee/v1/:employeeId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"v1",
+								":employeeId"
+							],
+							"variable": [
+								{
+									"key": "employeeId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success (200)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1/:employeeId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1",
+										":employeeId"
+									],
+									"variable": [
+										{
+											"key": "employeeId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"name\": \"Budi\",\n        \"is_active\": true,\n        \"start_date\": \"2022-12-12\",\n        \"end_date\": \"2029-12-12\",\n        \"educations\": [\n            {\n                \"school\": \"SMKN 7 Jakarta\",\n                \"education_level\": \"Sma\",\n                \"education_description\": \"Sekolah Menengah Atas\"\n            }\n        ],\n        \"profile\": {\n            \"gender\": \"Laki-Laki\",\n            \"is_married\": true,\n            \"prof_pict\": null\n        },\n        \"families\": [\n            {\n                \"name\": \"Marni\",\n                \"relation\": \"Istri\"\n            },\n            {\n                \"name\": \"Clara\",\n                \"relation\": \"Anak\"\n            },\n            {\n                \"name\": \"Stephanie\",\n                \"relation\": \"Anak\"\n            }\n        ]\n    },\n    \"message\": \"Success\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/employee/v1/:employeeId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"v1",
+								":employeeId"
+							],
+							"variable": [
+								{
+									"key": "employeeId",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Employee Not Found (404)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1/:employeeId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1",
+										":employeeId"
+									],
+									"variable": [
+										{
+											"key": "employeeId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 404,\n    \"data\": null,\n    \"message\": \"Employee not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Employee Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/employee/v1/report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"v1",
+								"report"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success (200)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1/report",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1",
+										"report"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"data\": [\n        {\n            \"employeeID\": 1,\n            \"employeeName\": \"Budi\",\n            \"nik\": \"11012\",\n            \"isActive\": true,\n            \"gender\": \"Laki-Laki\",\n            \"age\": 27,\n            \"schoolName\": \"SMKN 7 Jakarta\",\n            \"level\": \"Sma\",\n            \"familyData\": \"1 Istri & 2 Anak\"\n        },\n        {\n            \"employeeID\": 2,\n            \"employeeName\": \"Jarot\",\n            \"nik\": \"11013\",\n            \"isActive\": true,\n            \"gender\": \"Laki-Laki\",\n            \"age\": 28,\n            \"schoolName\": \"Universitas Negeri Jakarta\",\n            \"level\": \"Strata 1\",\n            \"familyData\": \"-\"\n        }\n    ],\n    \"message\": \"Success\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Eddie Tansil\",\r\n    \"nik\": \"3820182048201948\",\r\n    \"profile\": {\r\n        \"placeOfBirth\": \"Jakarta\",\r\n        \"dateOfBirth\": \"1924-02-02\",\r\n        \"isMarried\": true,\r\n        \"profileUrl\": \"http://github.com/\",\r\n        \"gender\": \"Laki-Laki\"\r\n    },\r\n    \"educations\": [\r\n        {\r\n            \"schoolName\": \"Universitas Indonesia\",\r\n            \"level\": \"Strata 1\",\r\n            \"description\": \"Bachelor of Engineering\"\r\n        }\r\n    ],\r\n    \"families\": [\r\n        {\r\n            \"name\": \"Andriana\",\r\n            \"relation\": \"Anak\",\r\n            \"job\": \"Influencer\",\r\n            \"placeOfBirth\": \"Jakarta\",\r\n            \"dateOfBirth\": \"1969-02-02\",\r\n            \"religion\": \"Protestan\",\r\n            \"isLife\": true,\r\n            \"isDivorced\": false\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employee/v1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"v1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success (201)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Eddie Tansil\",\r\n    \"nik\": \"3820182048201948\",\r\n    \"profile\": {\r\n        \"placeOfBirth\": \"Jakarta\",\r\n        \"dateOfBirth\": \"1924-02-02\",\r\n        \"isMarried\": true,\r\n        \"profileUrl\": \"http://github.com/\",\r\n        \"gender\": \"Laki-Laki\"\r\n    },\r\n    \"educations\": [\r\n        {\r\n            \"schoolName\": \"Universitas Indonesia\",\r\n            \"level\": \"Strata 1\",\r\n            \"description\": \"Bachelor of Engineering\"\r\n        }\r\n    ],\r\n    \"families\": [\r\n        {\r\n            \"name\": \"Andriana\",\r\n            \"relation\": \"Anak\",\r\n            \"job\": \"Influencer\",\r\n            \"placeOfBirth\": \"Jakarta\",\r\n            \"dateOfBirth\": \"1969-02-02\",\r\n            \"religion\": \"Protestan\",\r\n            \"isLife\": true,\r\n            \"isDivorced\": false\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 201,\n    \"data\": {\n        \"createdAt\": \"2025-03-01T23:27:04.347Z\",\n        \"updatedAt\": \"2025-03-01T23:27:04.348Z\",\n        \"id\": 7,\n        \"nik\": \"3820182048201948\",\n        \"name\": \"Eddie Tansil\",\n        \"isActive\": true,\n        \"startDate\": \"2025-03-02\",\n        \"endDate\": \"2026-03-02\",\n        \"createdBy\": \"user\",\n        \"updatedBy\": \"user\"\n    },\n    \"message\": \"Employee created\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "PATCH",
+						"header": []
+					},
+					"response": [
+						{
+							"name": "Success (201)",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Eddie Handoko\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/employee/v1/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"employee",
+										"v1",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"id\": 7,\n        \"nik\": \"3820182048201948\",\n        \"name\": \"Eddie Handoko\",\n        \"isActive\": true,\n        \"startDate\": \"2025-03-02\",\n        \"endDate\": \"2026-03-02\",\n        \"createdBy\": \"user\",\n        \"updatedBy\": \"user\",\n        \"createdAt\": \"2025-03-01T23:27:04.347Z\",\n        \"updatedAt\": \"2025-03-02T06:35:13.201Z\",\n        \"profile\": null,\n        \"educations\": [\n            {\n                \"id\": 4,\n                \"employeeId\": 7,\n                \"name\": \"Universitas Indonesia\",\n                \"level\": \"Strata 1\",\n                \"description\": \"Bachelor of Engineering\",\n                \"createdBy\": \"user\",\n                \"updatedBy\": \"user\",\n                \"createdAt\": \"2025-03-01T23:27:04.362Z\",\n                \"updatedAt\": \"2025-03-01T23:27:04.362Z\",\n                \"employee_id\": 7\n            }\n        ],\n        \"families\": [\n            {\n                \"id\": 4,\n                \"employeeId\": 7,\n                \"name\": \"Andriana\",\n                \"identifier\": \"17408968243540on74k\",\n                \"job\": \"Influencer\",\n                \"placeOfBirth\": null,\n                \"dateOfBirth\": \"1969-02-02\",\n                \"religion\": \"Protestan\",\n                \"isLife\": true,\n                \"isDivorced\": false,\n                \"relation\": \"Anak\",\n                \"createdBy\": \"user\",\n                \"updatedBy\": \"user\",\n                \"createdAt\": \"2025-03-01T23:27:04.355Z\",\n                \"updatedAt\": \"2025-03-01T23:27:04.355Z\",\n                \"employee_id\": 7\n            }\n        ]\n    },\n    \"message\": \"Success\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		}
+	]
+}

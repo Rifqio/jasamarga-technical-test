@@ -43,7 +43,7 @@ export const DeleteEmployee: RequestHandler = async (req, res) => {
 };
 
 export const CreateEmployee: RequestHandler = async (req, res) => {
-    const body = req.zod.body as CreateEmployeeDTO;
+    const body = req.body as CreateEmployeeDTO;
     try {
         const data = await EmployeeService.CreateEmployee(body);
         return res.created("Employee created", data);
@@ -54,8 +54,8 @@ export const CreateEmployee: RequestHandler = async (req, res) => {
 };
 
 export const UpdateEmployee: RequestHandler = async (req, res) => {
-    const { employeeId } = req.zod.params as FindOneEmployeeDTO;
-    const body = req.zod.body as UpdateEmployeeDTO;
+    const { employeeId } = req.params as FindOneEmployeeDTO;
+    const body = req.body as UpdateEmployeeDTO;
     try {
         const data = await EmployeeService.UpdateEmployee(employeeId, body);
         return res.success(data);
@@ -71,6 +71,20 @@ export const GetEmployeeReport: RequestHandler = async (req, res) => {
         return res.success(data);
     } catch (error) {
         Logger.error(Context, "GetEmployeeReport", error);
+        return res.buildErrorResponse(error);
+    }
+}
+
+export const UploadProfilePicture: RequestHandler = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.validationErrors([{ key: 'profile', message: 'profile is required' }]);
+        }
+
+        const uploadFile = await EmployeeService.UploadImage(req.file);
+        return res.created('Success upload file', { file_url: uploadFile });
+    } catch (error) {
+        Logger.error(Context, 'UploadBlogMedia', error);
         return res.buildErrorResponse(error);
     }
 }

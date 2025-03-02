@@ -31,7 +31,7 @@ export class EmployeeFamily extends Model {
     @Column({ type: DataType.STRING(255) })
     job: string;
 
-    @Column({ type: DataType.STRING(100) })
+    @Column({ type: DataType.STRING(100), field: "place_of_birth" })
     placeOfBirth: string;
 
     @Column({ type: DataType.DATE, field: "date_of_birth" })

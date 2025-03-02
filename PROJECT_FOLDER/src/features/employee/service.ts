@@ -120,7 +120,6 @@ export const CreateEmployee = async (data: CreateEmployeeDTO) => {
         const startDate = new Date(Date.now());
         const endDate = new Date(startDate);
         endDate.setFullYear(endDate.getFullYear() + 1);
-
         const employee = await Employee.create(
             {
                 nik: data.nik,
@@ -130,48 +129,62 @@ export const CreateEmployee = async (data: CreateEmployeeDTO) => {
                 endDate,
                 createdBy: "user",
                 updatedBy: "user",
-                profile: {
-                    placeOfBirth: data.profile.placeOfBirth,
-                    dateOfBirth: data.profile.dateOfBirth,
-                    gender: data.profile.gender,
-                    isMarried: false,
-                    profPict: data.profile.profileUrl || "",
-                    createdBy: "user",
-                    updatedBy: "user",
-                },
-                educations: data.educations.map((education) => ({
-                    name: education.schoolName,
-                    level: education.level,
-                    description: education.description,
-                    createdBy: "user",
-                    updatedBy: "user",
-                })),
-                families:
-                    data.families?.map((family) => ({
-                        name: family.name,
-                        relation: family.relation,
-                        job: family.job,
-                        identifier:
-                            Date.now().toString() +
-                            Math.random().toString(36).substring(7),
-                        placeOfBirth: family.placeOfBirth,
-                        dateOfBirth: family.dateOfBirth,
-                        religion: family.religion,
-                        isLife: family.isLife,
-                        isDivorced: family.isDivorced,
-                        createdBy: "user",
-                        updatedBy: "user",
-                    })) || [],
             },
-            {
-                include: [
-                    { model: EmployeeProfile },
-                    { model: Education },
-                    { model: EmployeeFamily },
-                ],
-                transaction,
-            }
+            { transaction }
         );
+        
+        const employeeId = employee.id;
+        
+        await EmployeeFamily.bulkCreate(
+            data.families?.map((family) => ({
+                employeeId,
+                name: family.name,
+                relation: family.relation,
+                job: family.job,
+                identifier:
+                    Date.now().toString() + Math.random().toString(36).substring(7),
+                place_of_birth: family.placeOfBirth,
+                dateOfBirth: family.dateOfBirth,
+                religion: family.religion,
+                isLife: family.isLife,
+                isDivorced: family.isDivorced,
+                createdBy: "user",
+                updatedBy: "user",
+            })) || [],
+            { transaction }
+        );
+        
+        await Education.bulkCreate(
+            data.educations.map((education) => ({
+                employeeId,
+                name: education.schoolName,
+                level: education.level,
+                description: education.description,
+                createdBy: "user",
+                updatedBy: "user",
+            })),
+            { transaction }
+        );
+        
+        await EmployeeFamily.bulkCreate(
+            data.families?.map((family) => ({
+                employeeId,
+                name: family.name,
+                relation: family.relation,
+                job: family.job,
+                identifier:
+                    Date.now().toString() + Math.random().toString(36).substring(7),
+                placeOfBirth: family.placeOfBirth,
+                dateOfBirth: family.dateOfBirth,
+                religion: family.religion,
+                isLife: family.isLife,
+                isDivorced: family.isDivorced,
+                createdBy: "user",
+                updatedBy: "user",
+            })) || [],
+            { transaction }
+        );
+        
         await transaction.commit();
         return employee;
     } catch (error) {
@@ -213,7 +226,7 @@ export const UpdateEmployee = async (id: number, data: UpdateEmployeeDTO) => {
             isUndefined
         );
 
-        if (isEmpty(updatedEmployeeData)) {
+        if (!isEmpty(updatedEmployeeData)) {
             await employee.update(updatedEmployeeData, { transaction });
         }
 
@@ -286,6 +299,11 @@ export const GetEmployeeReport = async () => {
         Logger.error(Context, "GetEmployeeReport", error);
         throw error;
     }
+}
+
+export const UploadImage = async (file: Express.Multer.File) => {
+    const filePath = `/assets/${file.filename}`; 
+    return filePath;
 }
 const _validateNIK = async (nik: string) => {
     return Employee.findOne({
