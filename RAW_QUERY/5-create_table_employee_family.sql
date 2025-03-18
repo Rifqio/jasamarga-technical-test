@@ -1,5 +1,5 @@
 create type religion as enum ('Islam', 'Protestan', 'Katolik', 'Buda', 'Konghucu');
-create type relation_status as enum ('Suami', 'Istri', 'Anak', 'Anak Sambung')
+create type relation_status as enum ('Suami', 'Istri', 'Anak', 'Anak Sambung');
 
 create table employee_family (
     id serial primary key,
